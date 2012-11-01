@@ -1,0 +1,266 @@
+<!doctype html>
+ 
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>jQuery UI Sortable - Default functionality</title>
+    
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.0/themes/base/jquery-ui.css" />
+    <link rel="stylesheet" href="style.css" />
+    
+    
+    <script src="http://code.jquery.com/jquery-1.8.2.js"></script>
+    <script src="http://code.jquery.com/ui/1.9.0/jquery-ui.js"></script>
+    <script language="javascript" type="text/javascript" src="js/tiny_mce/tiny_mce.js"></script>
+    
+    <script src="js/CommandSet.js "></script>
+	<script src="js/RenderBlocks.js"></script>
+    
+    <style>
+    #sortable { list-style-type: none; margin: 0; padding: 0; width: 60%; }
+    #sortable li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.4em; height: 18px; }
+    #sortable li span { position: absolute; margin-left: -1.3em; }
+    </style>
+    <script>
+    
+    var renderBlockManager;
+    
+    $( window ).load ( function () {
+    
+    		// init tinyMCE and add each instance manually
+    	tinyMCE.init ( { theme : "advanced", mode : "none", width : "100%", height : "400px" } );
+    
+    	/* var renderBlockItem1 = new RenderBlockItem ( $ ( "#test1" ), 'text', {} );
+		var renderBlockItem2 = new RenderBlockItem ( $ ( "#test2" ), 'text', {} );
+		var renderBlockItem3 = new RenderBlockItem ( $ ( "#test3" ), 'text', {} );
+		
+		var renderBlockItem4 = new RenderBlockItem ( $ ( "#test4" ), 'image', {} );
+    
+    	var renderBlockItem5 = new RenderBlockItem ( $ ( "#test5" ), 'listing', {} );
+    	
+    	var renderBlockItem6 = new RenderBlockItem ( $ ( "#test6" ), 'multi_html', {} ); 
+    
+        $( "#sort_menu.ui-sortable" ).sortable ( { handle : "#drag_handle", activate: onUISortableActivate, stop: onUISortableStop } ); */
+        
+        renderBlockManager = new RenderBlockManager ( $ ( "#render_block_manager" ) );
+        renderBlockManager.load ( '{"data":[{"type":"listing","config":{},"value":[{"title":"&#34; &#39; &#34; dsfds &#39; &#34; &#39; &#96; &#96;","link_type":"","link":"&#39; asdf &#34;","alt":"sadf&#34; &#34; dsd"},{"title":"asdf s&#34; &#39; &#34; &#96; ","link_type":"","link":"asdf s&#34; &#39; &#34; &#96; ","alt":"asdf s&#34; &#39; &#34; &#96; "}]}],"config":{}}' );
+    });
+    
+    
+    function save () {
+    
+    	var saveData = renderBlockManager.save ();
+    
+    	console.log ( saveData );
+    	
+    	$ ( "#save_parse" ).val ( JSON.stringify ( saveData, jsonStringify ) );
+    	
+    	// console.log ( JSON.stringify ( saveData, jsonStringify ) );
+    }
+    
+    </script>
+</head>
+<body>
+ 
+ 	<div style="float:left; clear:both;"><input id="save_button" type="button" value="save" onclick="save ()" /></div>
+ 
+ 	<div id="render_block_manager" class="render-blocks-manager"></div>
+ 
+	<!-- <ul id="sort_menu" class='render-block-list ui-sortable'>
+		<li id="test1" class="text-block"></li>
+		<li id="test2"></li>
+		<li id="test3"></li>
+		
+		<li id="test4"></li>
+		
+		<li id="test5"></li>
+		
+		<li id="test6"></li>
+	</ul> -->
+	
+	
+	<textarea id="save_parse" style="float:left; clear:both; width:100%; margin: 40px 0;"></textarea>
+	
+	<div id="_rb_templates" class="rb-templates">
+	
+		<div id="render_block_manager">
+			<div class="main-menu">
+				<select id="block_select" class="block-select">
+					<option value="">Please Select a Block Type</option>
+					<option value="text">Text Block</option>
+					<option value="image">Image List</option>
+					<option value="listing">Listing Type</option>
+					<option value="multi_html">Multi HTML Blocks</option>
+				</select>
+				<input id="block_select_button" type="button" class="block-select-button" value="add block" />
+			</div>
+			<ul id="render_block_list" class="render-block-list ui-sortable"></ul>
+		</div>
+	
+		<div id="text_block">
+			<div class="render-block text-block">
+				<img id="toggle_expanded_icon" src="images/toggle_expand.png" class=".toggle-expand-icon" />
+				<div class="render-block-menu">
+					<div class="block-drag-handle"></div>
+				</div>
+				<div class="content">
+					<div class="collapsed">
+						<h2>Text Block</h2> <div class="notes">Notes:&nbsp;&nbsp;</div>
+						<div class="preview">{preview}</div>
+					</div>
+					
+					<div class="expanded">
+						{fieldset}
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div id="image_block">
+			<div class="render-block image-block">
+				<img id="toggle_expanded_icon" src="images/toggle_expand.png" class=".toggle-expand-icon" />
+				<div class="render-block-menu">
+					<div class="block-drag-handle"></div>
+				</div>
+				<div class="content">
+					<div class="collapsed">
+						<h2>Image Block</h2> <div class="notes">Notes:&nbsp;&nbsp;</div>
+						<div class="preview">{preview}</div>
+					</div>
+					
+					<div class="expanded">
+						{fieldset}
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div id="listing_block">
+			<div class="render-block image-block">
+				<img id="toggle_expanded_icon" src="images/toggle_expand.png" class=".toggle-expand-icon" />
+				<div class="render-block-menu">
+					<div class="block-drag-handle"></div>
+				</div>
+				<div class="content">
+					<div class="collapsed">
+						<h2>Listing Block</h2> <div class="notes">Notes:&nbsp;&nbsp;</div>
+						<div class="preview">{preview}</div>
+					</div>
+					
+					<div class="expanded">
+						{fieldset}
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div id="multi_html_block">
+			<div class="render-block html-section-block">
+				<img id="toggle_expanded_icon" src="images/toggle_expand.png" class=".toggle-expand-icon" />
+				<div class="render-block-menu">
+					<div class="block-drag-handle"></div>
+				</div>
+				<div class="content">
+					<div class="collapsed">
+						<h2>HTML Section Block</h2> <div class="notes">Notes:&nbsp;&nbsp;</div>
+						<div class="preview">{preview}</div>
+					</div>
+					
+					<div class="expanded">
+						{fieldset}
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="input">
+			<div class="hidden">
+				<input name="{name}" class="hidden" type="hidden" value="{value}" />
+			</div>
+
+						
+			<div class="text">
+				<input name="{name}" class="text" type="text" value="{value}" />
+			</div>
+
+			
+			<div class="textarea">
+				<textarea id="{id}" name="{name}" class="tiny-mce-textarea">{value}</textarea>
+			</div>
+			
+			
+			<div class="radio">
+				<input name="{name}" class="radio" type="radio" />
+			</div>
+			
+			<div class="image">
+				<input type="button" class="image-file" value="image" /><input class="image-text" name="image" />
+			</div>
+			
+			<div class="file">
+				<input type="button" class="file" value="file" /><input class="file-text" name="file" />
+			</div>
+			
+			<div class="image-slot">
+				<div class="item-drag-handle">&nbsp;</div>
+				<div class="item-set-info">
+					<div class="item-input-row"><label>Title</label><input name="title" class="title-text" value="{title}" /></div>
+					<div class="item-input-row"><label>Image</label><input type="button" class="image-file" value="image" /><input class="image-text" name="image" value="{image}" /></div>
+					<div class="item-input-row"><label>Roll Over Image</label><input type="button" class="image-file" value="image" /><input class="image-text" name="rollover" value="{rollover}" /></div>
+					<div class="item-input-row">
+						<label>Link Type</label>
+						<select name="link_type" class="link-type">
+							<option value="">link</option>
+							<option value="video-link">Video</option>
+						</select>
+					</div>
+					<div class="item-input-row"><label>Link</label><input class="link-text" name="link" value="{link}" /></div>
+					<div class="item-input-row"><label>Alt. Text</label><input class="alt-text" name="alt" value="{alt}" /></div>
+				</div>
+				<div class="item-set-menu">
+					<img class="add-row" src="images/add.png" />
+					<img class="delete-row" src="images/delete.png" />
+				</div>
+			</div>
+			
+			<div class="listing-slot">
+				<div class="item-drag-handle">&nbsp;</div>
+				<div class="item-set-info">
+					<div class="item-input-row"><label>Title</label><input name="title" class="title-text" value="{title}" /></div>
+					<div class="item-input-row">
+						<label>Link Type</label>
+						<select name="link_type" class="link-type">
+							<option value="">link</option>
+							<option value="video-link">Video</option>
+						</select>
+					</div>
+					<div class="item-input-row"><label>Link</label><input class="link-text" name="link" value="{link}" /></div>
+					<div class="item-input-row"><label>Link Title</label><input class="link-title" name="alt" value="{alt}" /></div>
+				</div>
+				<div class="item-set-menu">
+					<img class="add-row" src="images/add.png" />
+					<img class="delete-row" src="images/delete.png" />
+				</div>
+			</div>
+			
+			<div class="multi-html-slot">
+				<div class="item-drag-handle">&nbsp;</div>
+				<div class="item-set-info">
+					<div><label>HTML Block</label><textarea id="{id}" name="{name}" class="tiny-mce-textarea">{value}</textarea></div>
+				</div>
+				<div class="item-set-menu">
+					<img class="add-row" src="images/add.png" />
+					<img class="delete-row" src="images/delete.png" />
+				</div>
+			</div>
+			
+			
+			<div class="item-set">
+				<ul class="item-set-wrapper ui-sortable"></ul>
+			</div>
+
+		</div>
+	</div>
+ 
+</body>
+</html>
